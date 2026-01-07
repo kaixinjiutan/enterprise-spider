@@ -2,6 +2,9 @@ import time
 import random
 import requests
 from typing import Optional
+from utils.logger import get_logger
+
+logger = get_logger("HttpClient")
 
 class HttpClient:
     """
@@ -40,7 +43,9 @@ class HttpClient:
                 
                 if response.status_code in (403, 429):
                     wait = random.uniform(*self.sleep_range)
-                    print(f"[WARN]{response.status_code} 被限流, 第{attempt} 次重试， 休眠{wait:.1f}s")
+                    logger.warning(
+                        f"HTTP {response.status_code} 被限流， 第{attempt} 次重试， 休眠{wait:.1f}s"
+                    )
                     time.sleep(wait)
                     continue
                 print(
